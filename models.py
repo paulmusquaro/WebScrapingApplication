@@ -1,6 +1,6 @@
 from mongoengine import connect, Document, StringField, ReferenceField, ListField, CASCADE
 
-host = "mongodb+srv://paulmusquaro:thelastjedi@cluster0.xdsjw4l.mongodb.net/"
+host = "mongodb+srv://pavlokorjov9200:8Qw7iQEIIKekZtks@python9.j2j3njm.mongodb.net/"
 
 
 connect(host=host, ssl=True)
@@ -15,6 +15,6 @@ class Author(Document):
 
 class Quote(Document):
     author = ReferenceField(Author, reverse_delete_rule=CASCADE)
-    tags = ListField(StringField(max_length=15))
+    tags = ListField(StringField(max_length=230))
     quote = StringField()
     meta = {"collection": "quotes"}

@@ -1,21 +1,36 @@
 import json
-from mongoengine.errors import NotUniqueError
 from models import Author, Quote
 
-if __name__ == '__main__':
-    with open('authors.json', encoding='utf-8') as fd:
-        data = json.load(fd)
-        for el in data:
-            try:
-                author = Author(fullname=el.get('fullname'), born_date=el.get('born_date'),
-                                born_location=el.get('born_location'), description=el.get('description'))
-                author.save()
-            except NotUniqueError:
-                print(f"Автор вже існує {el.get('fullname')}")
 
-    with open('qoutes.json', encoding='utf-8') as fd:
-        data = json.load(fd)
-        for el in data:
-            author, *_ = Author.objects(fullname=el.get('author'))
-            quote = Quote(quote=el.get('quote'), tags=el.get('tags'), author=author)
-            quote.save()
+# Функція для завантаження даних з файла
+def load_json_data(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return json.load(file)
+
+
+# Завантаження авторів
+authors_data = load_json_data('authors.json')
+for author_data in authors_data:
+    existing_author = Author.objects(fullname=author_data["fullname"]).first()
+    if not existing_author:
+        author = Author(
+            fullname=author_data['fullname'],
+            born_date=author_data['born_date'],
+            born_location=author_data['born_location'],
+            description=author_data['description']
+        )
+        author.save()  # збереження автора у базі даних
+
+# Завантаження цитат
+quotes_data = load_json_data('quotes.json')
+for quote_data in quotes_data:
+    author = Author.objects(fullname=quote_data['author']).first()  # знаходимо автора у базі
+    if author:
+        existing_quote = Quote.objects(quote=quote_data['quote']).first()
+        if not existing_quote:
+            quote = Quote(
+                tags=quote_data['tags'],
+                author=author,
+                quote=quote_data['quote']
+            )
+            quote.save()  # збереження цитати у базі даних

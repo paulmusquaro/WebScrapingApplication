@@ -7,7 +7,7 @@ The program collects quotes and data about their authors directly from the site 
 
 Before you begin, ensure you have met the following requirements:
 
-- You have installed Python 3.11 or above.
+- You have installed Python 3.8 or above.
 - You have installed MongoDB and it's running on the default port.
 - You have installed Redis and it's running on the default port.
 - You have installed Scrapy.
